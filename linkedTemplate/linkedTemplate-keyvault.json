@@ -4,6 +4,7 @@
 	"parameters": {
       "location": {
         "type": "string",
+        "defaultValue": "[resourceGroup().location]",
         "metadata": {
           "description": "The location where resource is deployed."
         }
@@ -116,7 +117,7 @@
       }
   },
 	"variables": {
-      "keyVaultName": "[concat(parameters('keyVaultName'))]",
+      "keyVaultName": "[concat(parameters('keyVaultName'),uniqueString(resourceGroup().id))]",
       "location": "[parameters('location')]"
   },
 	"resources": [
@@ -158,7 +159,7 @@
       },
       {
           "type": "Microsoft.KeyVault/vaults/secrets",
-          "name": "[concat(parameters('keyVaultName'), '/', parameters('sqlDBSecretsObject').secrets[copyIndex()].secretName)]",
+          "name": "[concat(variables('keyVaultName'), '/', parameters('sqlDBSecretsObject').secrets[copyIndex()].secretName)]",
           "apiVersion": "2019-09-01",
           "dependsOn": [
               "[variables('keyVaultName')]"

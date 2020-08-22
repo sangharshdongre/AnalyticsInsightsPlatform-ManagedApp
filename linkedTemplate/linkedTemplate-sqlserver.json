@@ -4,6 +4,7 @@
 	"parameters": {
     "location": {
       "type": "string",
+      "defaultValue": "[resourceGroup().location]",
       "metadata": {
         "description": "The location where resource is deployed."
       }
@@ -35,7 +36,7 @@
   },
 	"variables": {
         "sqlServerName": "[concat(parameters('sqlServerName'), '-', uniqueString(resourceGroup().id))]",
-        "databaseName": "[concat(parameters('sqlDatabaseName'))]",
+        "databaseName": "[concat(parameters('sqlDatabaseName'),parameters('sqlServerName'))]",
         "location": "[parameters('location')]"
     },
 	"resources": [

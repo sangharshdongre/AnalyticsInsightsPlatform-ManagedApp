@@ -28,7 +28,6 @@
             }
         },
         "sqlServerName": {
-            "defaultValue": "[concat('aipsqlser-',uniqueString(resourceGroup().id))]",
             "type": "String",
             "metadata": {
                 "description": "Azure SQL Server name. Must be globally unique."
@@ -72,7 +71,6 @@
         },
         "adbWorkspaceName": {
             "type": "string",
-            "defaultValue": "[concat('aipadls-',uniqueString(resourceGroup().id))]",
             "metadata": {
                 "description": "Azure databricks workspace name"
             }
@@ -140,7 +138,8 @@
                                 }
                             ]
                         }
-                    }
+                    },
+                    "location": "[variables('location')]"
                 }
             }
         },
@@ -214,7 +213,8 @@
                     },
                     "accountType": {
                         "value": "[parameters('accountType')]"
-                    }
+                    },
+                    "location": "[variables('location')]"
                 }
             }
         },
@@ -233,7 +233,8 @@
                     },
                     "pricingTier": {
                         "value": "[parameters('pricingTier')]"
-                    }
+                    },
+                    "location": "[variables('location')]"
                 }
             }
         },
@@ -262,7 +263,8 @@
                     },
                     "mlSku": {
                         "value": "[parameters('mlSku')]"
-                    }
+                    },
+                    "location": "[variables('location')]"
                 }
             }
         }
