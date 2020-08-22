@@ -153,8 +153,7 @@
                         "label": "Storage Account Name",
                         "toolTip": "Azure Data Lake Storage V2",
                         "defaultValue": {
-                            "type": "Standard_LRS",
-                            "name": "aipadls"
+                            "type": "Standard_LRS"
                         },
                         "constraints":{
                             "allowedTypes": [
