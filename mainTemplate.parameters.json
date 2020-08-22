@@ -1,0 +1,30 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sqlServerName": {
+            "value": "demoaipsqlserver1"
+        },
+        "sqlDatabaseName": {
+            "value": "aipsqldb"
+        },
+        "sqlAdministratorLogin": {
+            "value": "aipsqladmin"
+        },
+        "sqlAdministratorLoginPassword": {
+            "value": "Aip_P@ssw0rd!"
+        },
+        "location": {
+            "value": "westus2"
+        },
+        "keyVaultName": {
+            "value": "aipkeyvault3"
+        },
+        "objectId": {
+            "value": "GEN-GUID"
+        },
+        "adfName": {
+            "value": "aipdemoadf"
+        }
+    }
+}

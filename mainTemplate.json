@@ -1,0 +1,235 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "keyVaultName": {
+            "type": "String",
+            "metadata": {
+                "description": "Specifies the name of the key vault."
+            }
+        },
+        "location": {
+            "defaultValue": "[resourceGroup().location]",
+            "type": "String",
+            "metadata": {
+                "description": "Location for all resources."
+            }
+        },
+        "objectId": {
+            "type": "String",
+            "metadata": {
+                "description": "Specifies the object ID of a user, service principal or security group in the Azure Active Directory tenant for the vault. The object ID must be unique for the list of access policies. Get it by using Get-AzADUser or Get-AzADServicePrincipal cmdlets."
+            }
+        },
+        "sqlServerName": {
+            "defaultValue": "[concat('aipsqlser-',uniqueString(resourceGroup().id))]",
+            "type": "String",
+            "metadata": {
+                "description": "Azure SQL Server name. Must be globally unique."
+            }
+        },
+        "sqlDatabaseName": {
+            "type": "String",
+            "metadata": {
+                "description": "Azure SQL database name."
+            }
+        },
+        "sqlAdministratorLogin": {
+            "type": "String",
+            "metadata": {
+                "description": "The admin user of the SQL Server"
+            }
+        },
+        "sqlAdministratorLoginPassword": {
+            "type": "SecureString",
+            "metadata": {
+                "description": "The password of the admin user of the SQL Server"
+            }
+        },
+        "adfName": {
+            "type": "String",
+            "metadata": {
+                "description": "Specifies the Azure Data Factory name."
+            }
+        }
+    },
+    "variables": {
+        "keyvaultName": "[concat(parameters('keyVaultName'))]",
+        "dbpasswordsecretName": "aipdemo1sqldbpassword",
+        "templateBaseUrl": "https://raw.githubusercontent.com/sangharshdongre/githubtest/master/",
+        "linkedKeyVaultTemplateUrl": "[uri(variables('templateBaseUrl'), 'linkedTemplate-keyvault.json')]",
+        "linkedSqlServerTemplateUrl": "[uri(variables('templateBaseUrl'), 'linkedTemplate-sqlserver.json')]",
+        "linkedAdfTemplate": "[uri(variables('templateBaseUrl'), 'linkedTemplate-ADF.json')]",
+        "linkedAdlTemplate": "[uri(variables('templateBaseUrl'),'linkedTemplate-ADL.json')]",
+        "linkedAdlTemplateParameter": "[uri(variables('templateBaseUrl'), 'linkedTemplate-ADL.parameters.json')]",
+        "linkedAdbTemplate": "[uri(variables('templateBaseUrl'), 'linkedTemplate-ADB.json')]",
+        "linkedAdbTemplateParameter": "[uri(variables('templateBaseUrl'), 'linkedTemplate-ADB.parameters.json')]",
+        "linkedMlTemplate": "[uri(variables('templateBaseUrl'), 'linkedTemplate-ML.json')]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "linkedTemplate-keyvault",
+            "properties": {
+                "mode": "incremental",
+                "templateLink": {
+                    "uri": "[variables('linkedKeyVaultTemplateUrl')]"
+                },
+                "parameters": {
+                    "keyVaultName": {
+                        "value": "[variables('keyvaultName')]"
+                    },
+                    "objectId": {
+                        "value": "[parameters('objectId')]"
+                    },
+                    "enabledForTemplateDeployment": {
+                        "value": true
+                    },
+                    "sqlDBSecretsObject": {
+                        "value": {
+                            "secrets": [
+                                {
+                                    "secretName": "[variables('dbpasswordsecretName')]",
+                                    "secretValue": "[parameters('sqlAdministratorLoginPassword')]"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "linkedTemplate-sqlserver",
+            "dependsOn": [
+                "linkedTemplate-keyvault"
+            ],
+            "properties": {
+                "mode": "incremental",
+                "templateLink": {
+                    "uri": "[variables('linkedSqlServerTemplateUrl')]"
+                },
+                "parameters": {
+                    "sqlServerName": {
+                        "value": "[parameters('sqlServerName')]"
+                    },
+                    "sqldatabasename": {
+                        "value": "[parameters('sqlDatabaseName')]"
+                    },
+                    "sqlAdministratorLogin": {
+                        "value": "[parameters('sqlAdministratorLogin')]"
+                    },
+                    "sqlAdministratorLoginPassword": {
+                        "reference": {
+                            "keyVault": {
+                                "id": "[reference('linkedTemplate-keyvault').outputs.kvResourceId.value]"
+                            },
+                            "secretName": "[variables('dbpasswordsecretName')]"
+                        }
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "linkedTemplate-ADF",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('linkedAdfTemplate')]"
+                },
+                "parameters": {
+                    "adfname": {
+                        "value": "[parameters('adfName')]"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "linkedTemplate-ADL",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('linkedAdlTemplate')]"
+                },
+                "parametersLink": {
+                    "uri": "[variables('linkedAdlTemplateParameter')]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "linkedTemplate-ADB",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('linkedAdbTemplate')]"
+                },
+                "parametersLink": {
+                    "uri": "[variables('linkedAdbTemplateParameter')]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "linkedTemplate-ML",
+            "dependsOn": [
+                "linkedTemplate-keyVault",
+                "linkedTemplate-ADB"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('linkedMlTemplate')]"
+                },
+                "parameters": {
+                    "keyVaultName": {
+                        "value": "[variables('keyvaultName')]"
+                    },
+                    "adbWorkspace": {
+                        "value": "[reference('linkedTemplate-ADB').outputs.adbResourceId.value]"
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {
+        "aipKeyVault": {
+            "type": "String",
+            "value": "[reference('linkedTemplate-keyvault').outputs.kvResourceId.value]"
+        },
+        "sqlSvrFqdn": {
+            "type": "String",
+            "value": "[reference('linkedTemplate-sqlserver').outputs.dbfqdn.value]"
+        },
+        "aipAdf": {
+            "type": "String",
+            "value": "[reference('linkedTemplate-ADF').outputs.adfResourceId.value]"
+        },
+        "aipAdl": {
+            "type": "String",
+            "value": "[reference('linkedTemplate-AdL').outputs.adlResourceId.value]"
+        },
+        "aipAdb": {
+            "type": "String",
+            "value": "[reference('linkedTemplate-ADB').outputs.adbResourceId.value]"
+        },
+        "mlWorkspace": {
+            "type": "String",
+            "value": "[reference('linkedTemplate-ML').outputs.mlResourceId.value]"
+        }
+    }
+}

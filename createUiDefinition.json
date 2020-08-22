@@ -1,0 +1,268 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
+    "handler": "Microsoft.Azure.CreateUIDef",
+    "version": "0.1.2-preview",
+    "parameters": {
+        "basics": [],
+        "steps": [
+            {
+                "name": "keyVault",
+                "label": "KeyVault Settings",
+                "bladeTitle": "KeyVault",
+                "subLabel": {
+                    "preValidation": "Provide KeyVault Information.",
+                    "postValidation": "Great - let's move on"
+                },
+                "elements": [
+                    {
+                        "name": "keyVaultName",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "KeyVault Name",
+                        "toolTip": "Key Vault name should be globally unique. It must not start with numbers or symbols.",
+                        "constraints":{
+                            "required": true,
+                            "regex": "^[a-zA-Z0-9][0-9a-zA-Z\\-]{2,23}$",
+                            "validationMessage": "Key Vault name must be a 3-24 character string, containing only 0-9, a-z, A-Z, and hyphen (-)."
+                        }
+                    },
+                    {
+                        "name": "objectId",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Object Id",
+                        "toolTip": "Enter the user's object Id. See [more](http://blog.schertz.name/2018/06/locating-ids-in-azure-ad/)",
+                        "constraints":{
+                            "required": true
+                        }
+                    },
+                    {
+                        "name": "skuName",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "SKU Name",
+                        "toolTip": "Select the SKU for key vault.",
+                        "defaultValue": "Premium",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Standard",
+                                    "value": "Standard"
+                                },
+                                {
+                                    "label": "Premium",
+                                    "value": "Premium"
+                                }
+                            ]
+                        },
+                        "visible": true
+                    }
+                ]
+            },
+            {
+                "name": "sqlServer",
+                "label": "SQL Server Settings",
+                "bladeTitle": "SQL Server",
+                "subLabel": {
+                    "preValidation": "Provide SQL Server informaton",
+                    "postValidation": "Great - let's move on"
+                },
+                "elements": [
+                    {
+                        "name": "sqlServerName",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "SQL Server Name",
+                        "toolTip": "SQL Server name must be globally unique. Length 1-63 characters, can contain Lowercase letters, numbers, and hyphens. Cant' start with numbers or symbols. Can't start or end with hyphen.",
+                        "constraints":{
+                            "required": true,
+                            "regex": "^[a-zA-Z0-9][0-9a-zA-Z\\-]{1,63}$",
+                            "validationMessage": "Sql Server name must be a 1-63 character string, containing only 0-9, a-z, A-Z, and hyphen (-)."
+                        }
+                    },
+                    {
+                        "name": "sqlDatabaseName",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "SQL Database Name",
+                        "toolTip": "SQL database name length 1-128 characters, Can't use: <>*%&:\/? symbols. Can't end with period or space.",
+                        "constraints":{
+                            "required": true,
+                            "regex": "^[a-zA-Z0-9][0-9a-zA-Z\\-]{0,127}$",
+                            "validationMessage": "SQL Database name must not contain <>*%&:\/? symbols and can't end with period or space."
+                        }
+                    },
+                    {
+                        "name": "sqlAdministratorLogin",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "SQL Admin Account",
+                        "toolTip": "SQL admin account must be alphanumeric characters or user must be part of the Active Directory.",
+                        "constraints": {
+                            "required": true,
+                            "regex": "^[a-z][-a-z0-9]*$",
+                            "validationMessage": "Only alphanumeric characters are allowed."
+                        }
+                    },
+                    {
+                        "name": "sqlAdministratorLoginPassword",
+                        "type": "Microsoft.Common.PasswordBox",
+                        "label": {
+                            "password": "Password",
+                            "confirmPassword": "Confirm Password"
+                        },
+                        "toolTip": "",
+                        "constraints": {
+                            "required": true,
+                            "regex": "^.{8,}$",
+                            "validationMessage": "The password must be alphanumeric, contain at least 8 characters, and have at least 1 uppercase, 1 letter, and 1 number."
+                        },
+                        "options": {
+                            "hideConfirmation": false
+                        },
+                        "visible": true
+                    }
+                ]
+            },
+            {
+                "name": "azureDataFactoryName",
+                "label": "Azure Data Factory Settings",
+                "bladeTitle": "Azure Data Factory",
+                "elements": [
+                    {
+                        "name": "adfName",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Azure Data Factory Name",
+                        "toolTip": "Unique across Microsoft Azure. Names are case-insensitive, that is, MyDF and mydf refer to the same data factory.",
+                        "constraints":{
+                            "required": true,
+                            "regex": "^[a-zA-Z0-9][0-9a-zA-Z\\-]{2,62}$",
+                            "validationMessage": "Object names must start with a letter or a number, and can contain only letters, numbers, and the dash (-) character. Consecutive dashes are not permitted in container names. Name can be 3-63 characters long."
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "azureDataLake",
+                "label": "Azure Data Lake Settings",
+                "bladeTitle": "Azure Data Lake",
+                "subLabel": {
+                    "preValidation": "required",
+                    "postValidation": "done"
+                },
+                "elements": [
+                    {
+                        "name": "storageAccountName",
+                        "type": "Microsoft.Storage.StorageAccountSelector",
+                        "label": "Storage Account Name",
+                        "toolTip": "Azure Data Lake Storage V2",
+                        "defaultValue": {
+                            "type": "Standard_LRS",
+                            "name": "aipadls"
+                        },
+                        "constraints":{
+                            "allowedTypes": [
+                                "Standard_LRS",
+                                "Standard_GRS",
+                                "Standard_ZRS",
+                                "Standard_GZRS",
+                                "Premium_LRS",
+                                "Premium_ZRS"
+                            ]
+                        },
+                        "options": {
+                            "hideExisting": true
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "azureDatabricks",
+                "label": "Azure Databricks",
+                "bladeTitle": "Azure Databricks Settings",
+                "elements": [
+                    {
+                        "name": "workspaceName",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Name",
+                        "toolTip": "Azure Databricks name must be alphanumerics, underscores, and hyphens.",
+                        "constraints":{
+                            "required": true,
+                            "regex": "^[a-zA-Z0-9][a-zA-Z0-9_\\-]{3,30}$",
+                            "validationMessage": "Databricks workspace name must contain alphanumeric, underscores, and hyphens."
+                        }
+                    },
+                    {
+                        "name": "pricingTier",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "Pricing Tier",
+                        "toolTip": "Azure databricks SKU",
+                        "defaultValue": "Premium",
+                        "constraints": {
+                            "required": true,
+                            "allowedValues": [
+                                {
+                                    "value": "standard",
+                                    "label": "Standard"
+                                },
+                                {
+                                    "value": "premium",
+                                    "label": "Premium"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "ml",
+                "label": "Machine Learning Workspace",
+                "bladeTitle": "ML Workspace",
+                "elements": [
+                    {
+                        "name": "mlWorkspaceName",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "ML Workspace Name",
+                        "toolTip": "ML Services workspace name can contain alphanumerics and hyphen characters.",
+                        "constraints":{
+                            "required": true,
+                            "regex": "^[a-zA-Z0-9][a-zA-Z0-9_\\-]{3,33}$",
+                            "validationMessage": "Databricks workspace name must contain alphanumeric, underscores, and hyphens."
+                        }
+                    },
+                    {
+                        "name": "sku",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "ML Service SKU",
+                        "toolTip": "ML Service SKU (Pricing Tier)",
+                        "defaultValue": "enterprise",
+                        "constraints": {
+                            "required": true,
+                            "allowedValues": [
+                                {
+                                    "value": "basic",
+                                    "label": "Basic"
+                                },
+                                {
+                                    "value": "enterprise",
+                                    "label": "Enterprise"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        ],
+        "outputs": {
+            "location": "[location()]",
+            "keyVaultName": "[steps('keyVault').keyVaultName]",
+            "objectId": "[steps('keyVault').objectId]",
+            "skuName": "[steps('keyVault').skuName]",
+            "sqlServerName": "[steps('sqlServer').sqlServerName]",
+            "sqlDatabaseName": "[steps('sqlServer').sqlDatabaseName]",
+            "sqlAdministratorLogin": "[steps('sqlServer').sqlAdministratorLogin]",
+            "sqlAdministratorLoginPassword": "[steps('sqlServer').sqlAdministratorLoginPassword]",
+            "adfName": "[steps('azureDataFactoryName').adfName]",
+            "adlStorageAccountName": "[steps('azureDataLake').storageAccountName]",
+            "accountType": "[steps('azureDataLake').storageAccountName.type]",
+            "workspaceName": "[steps('azureDatabricks').workspaceName",
+            "pricingTier": "[steps('azureDatabricks').pricingTier",
+            "mlWorkspaceName": "[steps('ml').mlWorkspaceName]",
+            "sku": "[steps('ml').sku]"
+        }
+    }
+}

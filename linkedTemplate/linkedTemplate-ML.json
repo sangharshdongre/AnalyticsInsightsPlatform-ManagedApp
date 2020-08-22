@@ -1,0 +1,234 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "mlWorkspaceName": {
+      "defaultValue": "[concat('mlworkspace-',uniqueString(resourceGroup().Id))]",
+      "type": "string",
+      "metadata": {
+        "description": "Specifies the name of the Azure Machine Learning workspace."
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Specifies the location for all resources."
+      }
+    },
+    "sku": {
+      "type": "string",
+      "defaultValue": "enterprise",
+      "allowedValues": [
+        "basic",
+        "enterprise"
+      ],
+      "metadata": {
+        "description": "Specifies the sku, also referred as 'edition' of the Azure Machine Learning workspace."
+      }
+    },
+    "mlStorageAccountName": {
+      "type": "string",
+      "defaultValue": "[concat('mlstoracc',uniqueString(resourceGroup().id, parameters('mlWorkspaceName')))]",
+      "metadata": {
+        "description": "Name of the storage account."
+      }
+    },
+    "mlStorageAccountType": {
+      "type": "string",
+      "defaultValue": "Standard_LRS",
+      "allowedValues": [
+        "Standard_LRS",
+        "Standard_GRS",
+        "Standard_RAGRS",
+        "Standard_ZRS",
+        "Premium_LRS",
+        "Premium_ZRS",
+        "Standard_GZRS",
+        "Standard_RAGZRS"
+      ]
+    },
+    "mlStorageAccountResourceGroupName": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().name]"
+    },
+    "keyVaultName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the key vault."
+      }
+    },
+    "keyVaultResourceGroupName": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().name]"
+    },
+    "applicationInsightsName": {
+      "type": "string",
+      "defaultValue": "[concat('mlappinsights',uniqueString(resourceGroup().id, parameters('mlWorkspaceName')))]",
+      "metadata": {
+        "description": "Name of ApplicationInsights."
+      }
+    },
+    "applicationInsightsResourceGroupName": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().name]"
+    },
+    "containerRegistryName": {
+      "type": "string",
+      "defaultValue": "[concat('contreg',uniqueString(resourceGroup().id, parameters('mlWorkspaceName')))]",
+      "metadata": {
+        "description": "The container registry bind to the workspace."
+      }
+    },
+    "containerRegistrySku": {
+      "type": "string",
+      "defaultValue": "Standard",
+      "allowedValues": [
+        "Basic",
+        "Standard",
+        "Premium"
+      ]
+    },
+    "containerRegistryResourceGroupName": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().name]"
+    },
+    "adbWorkspace": {
+      "type": "string",
+      "metadata": {
+        "description": "Azure Databrick workspace to be linked to the workspace"
+      }
+    },
+    "confidential_data":{
+      "type": "string",
+      "defaultValue": "false",
+      "allowedValues": [
+        "false",
+        "true"
+      ],
+      "metadata": {
+        "description": "Specifies that the Azure Machine Learning workspace holds highly confidential data."
+      }
+    },
+    "encryption_status":{
+      "type": "string",
+      "defaultValue": "Disabled",
+      "allowedValues": [
+        "Enabled",
+        "Disabled"
+      ],
+      "metadata": {
+        "description": "Specifies if the Azure Machine Learning workspace should be encrypted with customer managed key."
+      }
+    },
+    "cmk_keyvault":{
+      "type": "string",
+      "defaultValue": "[resourceId('resourceGroup().name', 'Microsoft.KeyVault/vaults', parameters('keyVaultName'))]",
+      "metadata": {
+        "description": "Specifies the customer managed keyVault arm id."
+      }
+    },
+    "resource_cmk_uri":{
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Specifies if the customer managed keyvault key uri."
+      }
+    }
+  },
+  "variables": {
+    "tenantId": "[subscription().tenantId]",
+    "storageAccount": "[resourceId(parameters('mlStorageAccountResourceGroupName'), 'Microsoft.Storage/storageAccounts', parameters('mlStorageAccountName'))]",
+    "keyVault": "[resourceId(parameters('keyVaultResourceGroupName'), 'Microsoft.KeyVault/vaults', parameters('keyVaultName'))]",
+    "containerRegistry": "[resourceId(parameters('containerRegistryResourceGroupName'), 'Microsoft.ContainerRegistry/registries', parameters('containerRegistryName'))]",
+    "applicationInsights": "[resourceId(parameters('applicationInsightsResourceGroupName'), 'Microsoft.Insights/components', parameters('applicationInsightsName'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2019-04-01",
+      "name": "[parameters('mlStorageAccountName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "[parameters('mlStorageAccountType')]"
+      },
+      "kind": "StorageV2",
+      "properties": {
+        "encryption": {
+          "services": {
+            "blob": {
+              "enabled": true
+              },
+            "file": {
+              "enabled": true
+            }
+          },
+          "keySource": "Microsoft.Storage"
+        },
+        "supportsHttpsTrafficOnly": true
+      }
+    },
+    {
+      "type": "Microsoft.ContainerRegistry/registries",
+      "apiVersion": "2019-05-01",
+      "name": "[parameters('containerRegistryName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "[parameters('containerRegistrySku')]"
+      },
+      "properties": {
+        "adminUserEnabled": true
+      }
+    },
+    {
+      "type": "Microsoft.Insights/components",
+      "apiVersion": "2018-05-01-preview",
+      "name": "[parameters('applicationInsightsName')]",
+      "location": "[parameters('location')]",
+      "kind": "web",
+      "properties": {
+          "Application_Type": "web"
+      }
+    },
+    {
+      "type": "Microsoft.MachineLearningServices/workspaces",
+      "apiVersion": "2020-04-01",
+      "name": "[parameters('mlWorkspaceName')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[variables('storageAccount')]",
+        "[variables('applicationInsights')]",
+        "[variables('containerRegistry')]"
+      ],
+      "identity": {
+        "type": "systemAssigned"
+      },
+      "sku": {
+        "tier": "[parameters('sku')]",
+        "name": "[parameters('sku')]"
+      },
+      "properties": {
+        "friendlyName": "[parameters('mlWorkspaceName')]",
+        "storageAccount": "[variables('storageAccount')]",
+        "keyVault": "[variables('keyVault')]",
+        "applicationInsights": "[variables('applicationInsights')]",
+        "containerRegistry": "[variables('containerRegistry')]",
+        "adbWorkspace": "[parameters('adbWorkspace')]",
+        "encryption": {
+          "status": "[parameters('encryption_status')]",
+          "keyVaultProperties": {
+            "keyVaultArmId": "[parameters('cmk_keyvault')]",
+            "keyIdentifier": "[parameters('resource_cmk_uri')]"
+          }
+        },
+        "hbiWorkspace": "[parameters('confidential_data')]"
+      }
+    }
+  ],
+  "outputs": {
+    "mlResourceId": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.MachineLearningServices/workspaces', parameters('mlWorkspaceName'))]"
+    }
+  }
+}
