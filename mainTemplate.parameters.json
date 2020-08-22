@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "sqlServerName": {
-            "value": "demoaipsqlserver1"
+            "value": "demoaipsqlserver"
         },
         "sqlDatabaseName": {
             "value": "aipsqldb"
@@ -14,17 +14,26 @@
         "sqlAdministratorLoginPassword": {
             "value": "Aip_P@ssw0rd!"
         },
-        "location": {
-            "value": "westus2"
-        },
         "keyVaultName": {
-            "value": "aipkeyvault3"
+            "value": "aipkeyvault"
         },
         "objectId": {
             "value": "GEN-GUID"
         },
+        "kvSku": {
+            "value": "premium"
+        },
         "adfName": {
             "value": "aipdemoadf"
+        },
+        "adbWorkspaceName": {
+            "value": "aipadbworspace"
+        },
+        "adlStorageAccountName": {
+            "value": "aipadlstor"
+        },
+        "accountType": {
+            "value": "Standard_LRS"
         }
     }
 }

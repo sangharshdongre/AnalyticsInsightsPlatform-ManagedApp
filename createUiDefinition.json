@@ -31,13 +31,15 @@
                         "label": "Object Id",
                         "toolTip": "Enter the user's object Id. See [more](http://blog.schertz.name/2018/06/locating-ids-in-azure-ad/)",
                         "constraints":{
-                            "required": true
+                            "required": true,
+                            "regex": "^[a-zA-Z0-9][0-9a-zA-Z\\-]{0,36}$",
+                            "validationMessage": "It is a alphanumeric ID of user account. See [more](http://blog.schertz.name/2018/06/locating-ids-in-azure-ad/)"
                         }
                     },
                     {
-                        "name": "skuName",
+                        "name": "kvSku",
                         "type": "Microsoft.Common.DropDown",
-                        "label": "SKU Name",
+                        "label": "SKU",
                         "toolTip": "Select the SKU for key vault.",
                         "defaultValue": "Premium",
                         "constraints": {
@@ -94,7 +96,7 @@
                         "toolTip": "SQL admin account must be alphanumeric characters or user must be part of the Active Directory.",
                         "constraints": {
                             "required": true,
-                            "regex": "^[a-z][-a-z0-9]*$",
+                            "regex": "^[a-zA-Z0-9][0-9a-zA-Z]{0,127}$",
                             "validationMessage": "Only alphanumeric characters are allowed."
                         }
                     },
@@ -105,11 +107,11 @@
                             "password": "Password",
                             "confirmPassword": "Confirm Password"
                         },
-                        "toolTip": "",
+                        "toolTip": "SQL server login password. Must be at least 12 characters long.",
                         "constraints": {
                             "required": true,
-                            "regex": "^.{8,}$",
-                            "validationMessage": "The password must be alphanumeric, contain at least 8 characters, and have at least 1 uppercase, 1 letter, and 1 number."
+                            "regex": "^.{12,}$",
+                            "validationMessage": "The password must be alphanumeric, contain at least 12 characters, and have at least 1 uppercase, 1 letter, and 1 number."
                         },
                         "options": {
                             "hideConfirmation": false
@@ -146,7 +148,7 @@
                 },
                 "elements": [
                     {
-                        "name": "storageAccountName",
+                        "name": "adlStorageAccountName",
                         "type": "Microsoft.Storage.StorageAccountSelector",
                         "label": "Storage Account Name",
                         "toolTip": "Azure Data Lake Storage V2",
@@ -176,7 +178,7 @@
                 "bladeTitle": "Azure Databricks Settings",
                 "elements": [
                     {
-                        "name": "workspaceName",
+                        "name": "adbWorkspaceName",
                         "type": "Microsoft.Common.TextBox",
                         "label": "Name",
                         "toolTip": "Azure Databricks name must be alphanumerics, underscores, and hyphens.",
@@ -225,11 +227,11 @@
                         }
                     },
                     {
-                        "name": "sku",
+                        "name": "mlSku",
                         "type": "Microsoft.Common.DropDown",
                         "label": "ML Service SKU",
                         "toolTip": "ML Service SKU (Pricing Tier)",
-                        "defaultValue": "enterprise",
+                        "defaultValue": "Enterprise",
                         "constraints": {
                             "required": true,
                             "allowedValues": [
@@ -251,18 +253,18 @@
             "location": "[location()]",
             "keyVaultName": "[steps('keyVault').keyVaultName]",
             "objectId": "[steps('keyVault').objectId]",
-            "skuName": "[steps('keyVault').skuName]",
+            "kvSku": "[steps('keyVault').kvSku]",
             "sqlServerName": "[steps('sqlServer').sqlServerName]",
             "sqlDatabaseName": "[steps('sqlServer').sqlDatabaseName]",
             "sqlAdministratorLogin": "[steps('sqlServer').sqlAdministratorLogin]",
             "sqlAdministratorLoginPassword": "[steps('sqlServer').sqlAdministratorLoginPassword]",
             "adfName": "[steps('azureDataFactoryName').adfName]",
-            "adlStorageAccountName": "[steps('azureDataLake').storageAccountName]",
-            "accountType": "[steps('azureDataLake').storageAccountName.type]",
-            "workspaceName": "[steps('azureDatabricks').workspaceName",
+            "adlStorageAccountName": "[steps('azureDataLake').adlStorageAccountName]",
+            "accountType": "[steps('azureDataLake').adlStorageAccountName.type]",
+            "adbWorkspaceName": "[steps('azureDatabricks').adbWorkspaceName",
             "pricingTier": "[steps('azureDatabricks').pricingTier",
             "mlWorkspaceName": "[steps('ml').mlWorkspaceName]",
-            "sku": "[steps('ml').sku]"
+            "mlSku": "[steps('ml').mlSku]"
         }
     }
 }

@@ -4,7 +4,9 @@
     "parameters": {
         "location": {
             "type": "string",
-            "defaultValue": "[resourceGroup().location]"
+            "metadata": {
+                "description": "The location where resource is deployed."
+            }
         },
         "adlStorageAccountName": {
             "type": "string",
@@ -48,14 +50,15 @@
         }
     },
     "variables": {
-        "adlstorageaccname": "[concat(parameters('adlStorageAccountName'),uniqueString(resourceGroup().id))]"
+        "adlStorageAccountName": "[concat(parameters('adlStorageAccountName'),uniqueString(resourceGroup().id))]",
+        "location": "[parameters('location')]"
     },
     "resources": [
         {
-            "name": "[variables('adlstorageaccname')]",
+            "name": "[variables('adlStorageAccountName')]",
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2019-06-01",
-            "location": "[parameters('location')]",
+            "location": "[variables('location')]",
             "properties": {
                 "accessTier": "[parameters('accessTier')]",
                 "minimumTlsVersion": "[parameters('minimumTlsVersion')]",
@@ -63,23 +66,20 @@
                 "allowBlobPublicAccess": "[parameters('allowBlobPublicAccess')]",
                 "networkAcls": {
                     "bypass": "[parameters('networkAclsBypass')]",
-                    "defaultAction": "[parameters('networkAclsDefaultAction')]",
-                    "ipRules": []
+                    "defaultAction": "[parameters('networkAclsDefaultAction')]"
                 },
                 "isHnsEnabled": "[parameters('isHnsEnabled')]"
             },
-            "dependsOn": [],
             "sku": {
                 "name": "[parameters('accountType')]"
             },
-            "kind": "[parameters('kind')]",
-            "tags": {}
+            "kind": "[parameters('kind')]"
         }
     ],
     "outputs": {
         "adlResourceId": {
             "type": "string",
-            "value": "[resourceId('Microsoft.Storage/storageAccounts',variables('adlstorageaccname'))]"
+            "value": "[resourceId('Microsoft.Storage/storageAccounts',variables('adlStorageAccountName'))]"
         }
     }
 }

@@ -2,23 +2,28 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "The location where all the resources will be deployed."
+            }
+        },
         "keyVaultName": {
             "type": "String",
             "metadata": {
                 "description": "Specifies the name of the key vault."
             }
         },
-        "location": {
-            "defaultValue": "[resourceGroup().location]",
-            "type": "String",
-            "metadata": {
-                "description": "Location for all resources."
-            }
-        },
         "objectId": {
             "type": "String",
             "metadata": {
                 "description": "Specifies the object ID of a user, service principal or security group in the Azure Active Directory tenant for the vault. The object ID must be unique for the list of access policies. Get it by using Get-AzADUser or Get-AzADServicePrincipal cmdlets."
+            }
+        },
+        "kvSku": {
+            "type": "string",
+            "metadata": {
+                "description": "Key vault pricing tier."
             }
         },
         "sqlServerName": {
@@ -51,9 +56,46 @@
             "metadata": {
                 "description": "Specifies the Azure Data Factory name."
             }
+        },
+        "adlStorageAccountName": {
+            "type": "string",
+            "metadata": {
+                "description": "Azure datalake storage account name."
+            }
+        },
+        "accountType": {
+            "type": "string",
+            "metadata": {
+                "description": "Azure datalake storace account type"
+            }
+        },
+        "adbWorkspaceName": {
+            "type": "string",
+            "metadata": {
+                "description": "Azure databricks workspace name"
+            }
+        },
+        "pricingTier": {
+            "type": "string",
+            "metadata": {
+                "description": "Azure databrick SKU/pricing tier"
+            }
+        },
+        "mlWorkspaceName": {
+            "type": "string",
+            "metadata": {
+                "description": "Azure Machines Learning workspace name."
+            }
+        },
+        "mlSku": {
+            "type": "string",
+            "metadata": {
+                "description": "Machine Learning services pricing options"
+            }
         }
     },
     "variables": {
+        "location": "[parameters('location')]",
         "keyvaultName": "[concat(parameters('keyVaultName'))]",
         "dbpasswordsecretName": "aipdemo1sqldbpassword",
         "templateBaseUrl": "https://raw.githubusercontent.com/sangharshdongre/githubtest/master/",
@@ -61,9 +103,7 @@
         "linkedSqlServerTemplateUrl": "[uri(variables('templateBaseUrl'), 'linkedTemplate-sqlserver.json')]",
         "linkedAdfTemplate": "[uri(variables('templateBaseUrl'), 'linkedTemplate-ADF.json')]",
         "linkedAdlTemplate": "[uri(variables('templateBaseUrl'),'linkedTemplate-ADL.json')]",
-        "linkedAdlTemplateParameter": "[uri(variables('templateBaseUrl'), 'linkedTemplate-ADL.parameters.json')]",
         "linkedAdbTemplate": "[uri(variables('templateBaseUrl'), 'linkedTemplate-ADB.json')]",
-        "linkedAdbTemplateParameter": "[uri(variables('templateBaseUrl'), 'linkedTemplate-ADB.parameters.json')]",
         "linkedMlTemplate": "[uri(variables('templateBaseUrl'), 'linkedTemplate-ML.json')]"
     },
     "resources": [
@@ -85,6 +125,9 @@
                     },
                     "enabledForTemplateDeployment": {
                         "value": true
+                    },
+                    "kvSku": {
+                        "value": "[parameters('kvSku')]"
                     },
                     "sqlDBSecretsObject": {
                         "value": {
@@ -130,7 +173,7 @@
                         }
                     },
                     "location": {
-                        "value": "[parameters('location')]"
+                        "value": "[variables('location')]"
                     }
                 }
             }
@@ -149,7 +192,7 @@
                         "value": "[parameters('adfName')]"
                     },
                     "location": {
-                        "value": "[parameters('location')]"
+                        "value": "[variables('location')]"
                     }
                 }
             }
@@ -163,8 +206,13 @@
                 "templateLink": {
                     "uri": "[variables('linkedAdlTemplate')]"
                 },
-                "parametersLink": {
-                    "uri": "[variables('linkedAdlTemplateParameter')]"
+                "parameters": {
+                    "adlStorageAccountName": {
+                        "value": "[parameters('adlStorageAccountName')]"
+                    },
+                    "accountType": {
+                        "value": "[parameters('accountType')]"
+                    }
                 }
             }
         },
@@ -177,8 +225,13 @@
                 "templateLink": {
                     "uri": "[variables('linkedAdbTemplate')]"
                 },
-                "parametersLink": {
-                    "uri": "[variables('linkedAdbTemplateParameter')]"
+                "parameters": {
+                    "adbWorkspaceName": {
+                        "value": "[parameters('adbWorkspaceName')]"
+                    },
+                    "pricingTier": {
+                        "value": "[parameters('pricingTier')]"
+                    }
                 }
             }
         },
@@ -201,6 +254,12 @@
                     },
                     "adbWorkspace": {
                         "value": "[reference('linkedTemplate-ADB').outputs.adbResourceId.value]"
+                    },
+                    "mlWorkspaceName": {
+                        "value": "[parameters('mlWorkspaceName')]"    
+                    },
+                    "mlSku": {
+                        "value": "[parameters('mlSku')]"
                     }
                 }
             }
