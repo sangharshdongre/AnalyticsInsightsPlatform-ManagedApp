@@ -98,7 +98,7 @@
         "location": "[parameters('location')]",
         "keyvaultName": "[concat(parameters('keyVaultName'))]",
         "dbpasswordsecretName": "aipdemo1sqldbpassword",
-        "templateBaseUrl": "https://raw.githubusercontent.com/sangharshdongre/githubtest/master/",
+        "templateBaseUrl": "https://raw.githubusercontent.com/sangharshdongre/AnalyticsInsightsPlatform-ManagedApp/master/",
         "linkedKeyVaultTemplateUrl": "[uri(variables('templateBaseUrl'), 'linkedTemplate-keyvault.json')]",
         "linkedSqlServerTemplateUrl": "[uri(variables('templateBaseUrl'), 'linkedTemplate-sqlserver.json')]",
         "linkedAdfTemplate": "[uri(variables('templateBaseUrl'), 'linkedTemplate-ADF.json')]",

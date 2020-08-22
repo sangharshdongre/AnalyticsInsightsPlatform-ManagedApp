@@ -10,7 +10,9 @@
         },
         "adlStorageAccountName": {
             "type": "string",
-            "defaultValue": "[concat('aipadls',uniqueString(resourceGroup().Id))]"
+            "metadata": {
+                "description": "Name of the Azure datalake storage account."
+            }
         },
         "accountType": {
             "type": "string",
