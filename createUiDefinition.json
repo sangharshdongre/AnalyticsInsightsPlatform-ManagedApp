@@ -258,7 +258,7 @@
             "sqlAdministratorLogin": "[steps('sqlServer').sqlAdministratorLogin]",
             "sqlAdministratorLoginPassword": "[steps('sqlServer').sqlAdministratorLoginPassword]",
             "adfName": "[steps('azureDataFactoryName').adfName]",
-            "adlStorageAccountName": "[steps('azureDataLake').adlStorageAccountName]",
+            "adlStorageAccountName": "[steps('azureDataLake').adlStorageAccountName.name]",
             "accountType": "[steps('azureDataLake').adlStorageAccountName.type]",
             "adbWorkspaceName": "[steps('azureDatabricks').adbWorkspaceName",
             "pricingTier": "[steps('azureDatabricks').pricingTier",
