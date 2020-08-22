@@ -260,7 +260,7 @@
             "adfName": "[steps('azureDataFactoryName').adfName]",
             "adlStorageAccountName": "[steps('azureDataLake').adlStorageAccountName.name]",
             "accountType": "[steps('azureDataLake').adlStorageAccountName.type]",
-            "adbWorkspaceName": "[steps('azureDatabricks').adbWorkspaceName",
+            "adbWorkspaceName": "[steps('azureDatabricks').adbWorkspaceName]",
             "pricingTier": "[steps('azureDatabricks').pricingTier]",
             "mlWorkspaceName": "[steps('ml').mlWorkspaceName]",
             "mlSku": "[steps('ml').mlSku]"
