@@ -1,22 +1,8 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
     "handler": "Microsoft.Azure.CreateUIDef",
     "version": "0.1.2-preview",
     "parameters": {
-        "basics": [
-            {
-                "name": "kvNameApi",
-                "type": "Microsoft.Solutions.ArmApiControl",
-                "request": {
-                    "method": "POST",
-                    "path": "[concat(Subscription().id, '/providers/Microsoft.KeyVault/vaults/checkNameAvailability?api-version=2019-09-01')]",
-                    "body": "[parse(concat('{\"name\": \"',steps('keyVault').keyVaultName, '\", \"type\": \"Microsoft.KeyVault/vaults\"}'))]"
-                },
-                "options": {
-                    "text": ""
-                }
-            }
-        ],
+        "basics": [],
         "steps": [
             {
                 "name": "keyVault",
@@ -27,6 +13,15 @@
                     "postValidation": "Great - let's move on"
                 },
                 "elements": [
+                    {
+                        "name": "kvNameApi",
+                        "type": "Microsoft.Solutions.ArmApiControl",
+                        "request":{
+                            "method":"POST",
+                            "path":"[concat(Subscription().id, '/providers/Microsoft.KeyVault/vaults/checkNameAvailability?api-version=2019-09-01')]",
+                            "body":"[parse(concat('{\"name\": \"',steps('keyVault').keyVaultName, '\", \"type\": \"Microsoft.KeyVault/vaults\"}'))]"
+                        }
+                    },
                     {
                         "name": "keyVaultName",
                         "type": "Microsoft.Common.TextBox",
