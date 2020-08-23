@@ -18,7 +18,7 @@
                         "type": "Microsoft.Solutions.ArmApiControl",
                         "request":{
                             "method":"POST",
-                            "path":"[concat(Subscription().id, '/providers/Microsoft.KeyVault/vaults/checkNameAvailability?api-version=2019-09-01')]",
+                            "path":"[concat(Subscription().id, '/providers/Microsoft.KeyVault/checkNameAvailability?api-version=2019-09-01')]",
                             "body":"[parse(concat('{\"name\": \"',steps('keyVault').keyVaultName, '\", \"type\": \"Microsoft.KeyVault/vaults\"}'))]"
                         }
                     },
@@ -30,14 +30,14 @@
                         "constraints":{
                             "required": true,
                             "regex": "^[a-zA-Z0-9][0-9a-zA-Z\\-]{2,23}$",
+                            "validationMessage": "Key Vault name must be a 3-24 character string, containing only 0-9, a-z, A-Z, and hyphen (-).",
                             "validations": [
                                 {
                                     "isValid": "[not(equals(basics('kvNameApi').nameAvailable, false))]",
                                     "message": "[concat('Name unavailable: ',steps('keyVault').keyVaultName)]"
                                 }
-                            ],
-                            "validationMessage": "Key Vault name must be a 3-24 character string, containing only 0-9, a-z, A-Z, and hyphen (-)."
-                            
+                            ]
+                               
                         }
                     },
                     {
