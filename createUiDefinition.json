@@ -29,6 +29,7 @@
                         "toolTip": "Vault name must only contain alphanumeric characters and dashes and cannot start with a number.",
                         "constraints":{
                             "required": true,
+                            "regex": "^[a-zA-Z0-9][0-9a-zA-Z\\-]{2,23}$",
                             "validations": [
                                 {
                                     "isValid": "[not(equals(basics('kvNameApi').nameAvailable, false))]",
