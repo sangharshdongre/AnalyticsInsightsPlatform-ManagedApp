@@ -35,7 +35,8 @@
                                     "isValid": "[not(equals(basics('kvNameApi').nameAvailable, false))]",
                                     "message": "[concat('Name unavailable: ',steps('keyVault').keyVaultName)]"
                                 }
-                            ]
+                            ],
+                            "validationMessage": "Key Vault name must be a 3-24 character string, containing only 0-9, a-z, A-Z, and hyphen (-)."
                             
                         }
                     },
