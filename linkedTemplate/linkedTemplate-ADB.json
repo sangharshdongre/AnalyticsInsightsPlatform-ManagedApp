@@ -42,7 +42,7 @@
           "name": "[parameters('pricingTier')]"
         },
         "properties": {
-          "ManagedResourceGroupId": "[resourceId(subscription().id, variables('managedResourceGroupName'))]"
+          "ManagedResourceGroupId": "[concat('/',subscription().id, '/resourceGroups/', variables('managedResourceGroupName'))]"
         }
       }
     ],
