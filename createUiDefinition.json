@@ -1,8 +1,30 @@
 {
+    "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
     "handler": "Microsoft.Azure.CreateUIDef",
     "version": "0.1.2-preview",
     "parameters": {
-        "basics": [],
+        "basics": [
+            {
+                "name": "kvNameApi",
+                "type": "Microsoft.Solutions.ArmApiControl",
+                "request": {
+                    "method": "POST",
+                    "path": "[concat('/',subscription().id,'/providers/Microsoft.KeyVault/checkNameAvailability?api-version=2019-09-01')]",
+                    "body": "[parse(concat('{\"name\": \"',steps('keyVault').keyVaultName, '\", \"type\": \"Microsoft.KeyVault/vaults\"}'))]"
+                },
+                "toolTip": "Key Vault resource name validation."
+            },
+            {
+                "name": "sqlNameApi",
+                "type": "Microsoft.Solutions.ArmApiControl",
+                "request": {
+                    "method": "POST",
+                    "path": "[concat('/',subscription().id,'/providers/Microsoft.Sql/checkNameAvailability?api-version=2014-04-01')]",
+                    "body": "[parse(concat('{\"name\": \"',steps('sqlServer').sqlServerName, '\", \"type\": \"Microsoft.Sql/servers\"}'))]"
+                },
+                "toolTip": "Sql server resource name validation."
+            }
+        ],
         "steps": [
             {
                 "name": "keyVault",
@@ -14,30 +36,18 @@
                 },
                 "elements": [
                     {
-                        "name": "kvNameApi",
-                        "type": "Microsoft.Solutions.ArmApiControl",
-                        "request":{
-                            "method":"POST",
-                            "path":"[concat(Subscription().id, '/providers/Microsoft.KeyVault/checkNameAvailability?api-version=2019-09-01')]",
-                            "body":"[parse(concat('{\"name\": \"',steps('keyVault').keyVaultName, '\", \"type\": \"Microsoft.KeyVault/vaults\"}'))]"
-                        }
-                    },
-                    {
                         "name": "keyVaultName",
                         "type": "Microsoft.Common.TextBox",
                         "label": "KeyVault Name",
                         "toolTip": "Vault name must only contain alphanumeric characters and dashes and cannot start with a number.",
                         "constraints":{
                             "required": true,
-                            "regex": "^[a-zA-Z0-9][0-9a-zA-Z\\-]{2,23}$",
-                            "validationMessage": "Key Vault name must be a 3-24 character string, containing only 0-9, a-z, A-Z, and hyphen (-).",
                             "validations": [
                                 {
-                                    "isValid": "[not(equals(steps('keyVault').kvNameApi.nameAvailable, false)]",
-                                    "message": "[concat('Name unavailable: ',steps('keyVault').keyVaultName)]"
+                                    "isValid": "[not(equals(basics('kvNameApi').nameAvailable, false))]",
+                                    "message": "KeyVault name is already taken."
                                 }
                             ]
-                               
                         }
                     },
                     {
@@ -89,8 +99,12 @@
                         "toolTip": "SQL Server name must be globally unique. Length 1-63 characters, can contain Lowercase letters, numbers, and hyphens. Cant' start with numbers or symbols. Can't start or end with hyphen.",
                         "constraints":{
                             "required": true,
-                            "regex": "^[a-zA-Z0-9][0-9a-zA-Z\\-]{1,63}$",
-                            "validationMessage": "Sql Server name must be a 1-63 character string, containing only 0-9, a-z, A-Z, and hyphen (-)."
+                            "validations": [
+                                {
+                                    "isValid": "[not(equals(basics(sqlNameApi).nameAvailable, false))]",
+                                    "message": "SQL server name is unavailable."
+                                }
+                            ]
                         }
                     },
                     {
