@@ -28,16 +28,16 @@
       },
       "managedResourceGroupName": {
         "type": "string",
-        "defaultValue": "[concat(parameters('adbWorkspaceName'),'-', resourceGroup().id)]",
+        "defaultValue": "adbmanagedRG",
         "metadata": {
-          "description": "Managed resource group name for Azure Databricks."
+          "description": "Azure databricks managed resource group name"
         }
       }
     },
     "variables": {
       "location": "[parameters('location')]",
       "adbWorkspaceName": "[concat(parameters('adbWorkspaceName'),uniqueString(resourceGroup().id))]",
-      "ManagedResourceGroupId": "[concat(subscription().id, '/resourceGroups/', parameters('managedResourceGroupName'))]"
+      "ManagedResourceGroupId": "[concat('/subscriptions/',subscription().id,'/resourceGroups/', parameters('managedResourceGroupName'))]"
     },
     "resources": [
       {
