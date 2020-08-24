@@ -25,12 +25,19 @@
         "metadata": {
           "description": "The pricing tier of workspace."
         }
+      },
+      "managedResourceGroupName": {
+        "type": "string",
+        "defaultValue": "[concat(parameters('adbWorkspaceName'),'-', resourceGroup().id)]",
+        "metadata": {
+          "description": "Managed resource group name for Azure Databricks."
+        }
       }
     },
     "variables": {
       "location": "[parameters('location')]",
       "adbWorkspaceName": "[concat(parameters('adbWorkspaceName'),uniqueString(resourceGroup().id))]",
-      "managedResourceGroupName": "[concat(parameters('adbWorkspaceName'), '-', resourceGroup().id)]"
+      "ManagedResourceGroupId": "[concat(subscription().id, '/resourceGroups/', parameters('managedResourceGroupName'))]"
     },
     "resources": [
       {
@@ -42,7 +49,7 @@
           "name": "[parameters('pricingTier')]"
         },
         "properties": {
-          "ManagedResourceGroupId": "[concat('/',subscription().id, '/resourceGroups/', variables('managedResourceGroupName'))]"
+          "ManagedResourceGroupId": "[variables('ManagedResourceGroupId')]"
         }
       }
     ],
