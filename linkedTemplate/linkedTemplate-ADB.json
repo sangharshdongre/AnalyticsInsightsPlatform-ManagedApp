@@ -25,13 +25,6 @@
         "metadata": {
           "description": "The pricing tier of workspace."
         }
-      },
-      "managedResourceGroupName": {
-        "type": "string",
-        "defaultValue": "adbmanagedRG",
-        "metadata": {
-          "description": "Azure databricks managed resource group name"
-        }
       }
     },
     "variables": {
