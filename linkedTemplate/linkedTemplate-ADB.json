@@ -37,7 +37,7 @@
     "variables": {
       "location": "[parameters('location')]",
       "adbWorkspaceName": "[concat(parameters('adbWorkspaceName'),uniqueString(resourceGroup().id))]",
-      "ManagedResourceGroupId": "[concat('/subscriptions/',subscription().id,'/resourceGroups/', parameters('managedResourceGroupName'))]"
+      "adbmanagedRG": "[resourceId('Microsoft.Resources/resourceGroups',parameters('managedResourceGroupName'))]"
     },
     "resources": [
       {
@@ -49,7 +49,7 @@
           "name": "[parameters('pricingTier')]"
         },
         "properties": {
-          "ManagedResourceGroupId": "[variables('ManagedResourceGroupId')]"
+          "managedResourceGroupId": "[variables('adbmanagedRG')]"
         }
       }
     ],
