@@ -63,7 +63,7 @@
     },
     "applicationInsightsName": {
       "type": "string",
-      "defaultValue": "[concat('mlappinsights',uniqueString(resourceGroup().id, parameters('mlWorkspaceName')))]",
+      "defaultValue": "[concat('mlappinsights-', parameters('mlWorkspaceName'))]",
       "metadata": {
         "description": "Name of ApplicationInsights."
       }
@@ -74,7 +74,7 @@
     },
     "containerRegistryName": {
       "type": "string",
-      "defaultValue": "[concat('contreg',uniqueString(resourceGroup().id, parameters('mlWorkspaceName')))]",
+      "defaultValue": "[concat('contreg-', parameters('mlWorkspaceName'))]",
       "metadata": {
         "description": "The container registry bind to the workspace."
       }
