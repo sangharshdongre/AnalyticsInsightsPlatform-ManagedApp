@@ -53,7 +53,7 @@
     },
     "variables": {
         "location": "[parameters('location')]",
-        "adlStorageAccountName": "[concat(parameters('adlStorageAccountName'),uniqueString(resourceGroup().id))]"
+        "adlStorageAccountName": "[concat(parameters('adlStorageAccountName'), 'dlk')]"
     },
     "resources": [
         {

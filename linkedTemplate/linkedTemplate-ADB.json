@@ -29,7 +29,7 @@
     },
     "variables": {
       "location": "[parameters('location')]",
-      "adbWorkspaceName": "[concat(parameters('adbWorkspaceName'),uniqueString(resourceGroup().id))]",
+      "adbWorkspaceName": "[parameters('adbWorkspaceName')]",
       "managedResourceGroupName": "[concat('databricks-rg-', parameters('adbWorkspaceName'), '-', uniqueString(parameters('adbWorkspaceName'), resourceGroup().id))]"
     },
     "resources": [

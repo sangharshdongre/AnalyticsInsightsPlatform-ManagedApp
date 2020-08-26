@@ -35,7 +35,7 @@
     }
   },
 	"variables": {
-        "sqlServerName": "[concat(parameters('sqlServerName'), '-', uniqueString(resourceGroup().id))]",
+        "sqlServerName": "[parameters('sqlServerName')]",
         "databaseName": "[concat(parameters('sqlDatabaseName'),parameters('sqlServerName'))]",
         "location": "[parameters('location')]"
     },

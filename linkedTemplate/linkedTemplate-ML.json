@@ -28,7 +28,7 @@
     },
     "mlStorageAccountName": {
       "type": "string",
-      "defaultValue": "[concat('mlstoracc',uniqueString(resourceGroup().id, parameters('mlWorkspaceName')))]",
+      "defaultValue": "[concat('mlstoracc', parameters('mlWorkspaceName'))]",
       "metadata": {
         "description": "Name of the storage account."
       }
@@ -133,7 +133,7 @@
   },
   "variables": {
     "location": "[parameters('location')]",
-    "mlWorkspaceName": "[concat(parameters('mlWorkspaceName'),uniqueString(resourceGroup().id))]",
+    "mlWorkspaceName": "[parameters('mlWorkspaceName')]",
     "storageAccount": "[resourceId(parameters('mlStorageAccountResourceGroupName'), 'Microsoft.Storage/storageAccounts', parameters('mlStorageAccountName'))]",
     "containerRegistry": "[resourceId(parameters('containerRegistryResourceGroupName'), 'Microsoft.ContainerRegistry/registries', parameters('containerRegistryName'))]",
     "applicationInsights": "[resourceId(parameters('applicationInsightsResourceGroupName'), 'Microsoft.Insights/components', parameters('applicationInsightsName'))]"

@@ -15,7 +15,7 @@
     },
     "variables": {
         "location": "[parameters('location')]",
-        "adfName": "[concat(parameters('adfName'),uniqueString(resourceGroup().id))]"
+        "adfName": "[parameters('adfName')]"
     },
     "resources": [
         {
