@@ -57,10 +57,6 @@
         "description": "Name of the key vault."
       }
     },
-    "keyVaultResourceGroupName": {
-      "type": "string",
-      "defaultValue": "[resourceGroup().name]"
-    },
     "applicationInsightsName": {
       "type": "string",
       "defaultValue": "[concat('mlappinsights-', parameters('mlWorkspaceName'))]",
@@ -139,7 +135,6 @@
     "location": "[parameters('location')]",
     "mlWorkspaceName": "[concat(parameters('mlWorkspaceName'),uniqueString(resourceGroup().id))]",
     "storageAccount": "[resourceId(parameters('mlStorageAccountResourceGroupName'), 'Microsoft.Storage/storageAccounts', parameters('mlStorageAccountName'))]",
-    "keyVault": "[resourceId(parameters('keyVaultResourceGroupName'), 'Microsoft.KeyVault/vaults', parameters('keyVaultName'))]",
     "containerRegistry": "[resourceId(parameters('containerRegistryResourceGroupName'), 'Microsoft.ContainerRegistry/registries', parameters('containerRegistryName'))]",
     "applicationInsights": "[resourceId(parameters('applicationInsightsResourceGroupName'), 'Microsoft.Insights/components', parameters('applicationInsightsName'))]"
   },
@@ -210,7 +205,7 @@
       "properties": {
         "friendlyName": "[variables('mlWorkspaceName')]",
         "storageAccount": "[variables('storageAccount')]",
-        "keyVault": "[variables('keyVault')]",
+        "keyVault": "[parameters('keyVaultName')]",
         "applicationInsights": "[variables('applicationInsights')]",
         "containerRegistry": "[variables('containerRegistry')]",
         "adbWorkspace": "[parameters('adbWorkspace')]",
