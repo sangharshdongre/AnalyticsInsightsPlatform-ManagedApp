@@ -95,7 +95,7 @@
     },
     "variables": {
         "location": "[parameters('location')]",
-        "keyvaultName": "[concat(parameters('keyVaultName'))]",
+        "keyvaultName": "[parameters('keyVaultName')]",
         "dbpasswordsecretName": "aipdemo1sqldbpassword",
         "templateBaseUrl": "https://raw.githubusercontent.com/sangharshdongre/AnalyticsInsightsPlatform-ManagedApp/master/linkedTemplate/",
         "linkedKeyVaultTemplateUrl": "[uri(variables('templateBaseUrl'), 'linkedTemplate-keyvault.json')]",
@@ -243,7 +243,7 @@
                 },
                 "parameters": {
                     "keyVaultName": {
-                        "value": "[reference('linkedTemplate-keyvault').outputs.kvResourceId.value]"
+                        "value": "[variables('keyvaultName')]"
                     },
                     "adbWorkspace": {
                         "value": "[reference('linkedTemplate-ADB').outputs.adbResourceId.value]"

@@ -205,7 +205,7 @@
       "properties": {
         "friendlyName": "[variables('mlWorkspaceName')]",
         "storageAccount": "[variables('storageAccount')]",
-        "keyVault": "[parameters('keyVaultName')]",
+        "keyVault": "[resourceId(resourceGroup().name, 'Microsoft.KeyVault/vaults', parameters('keyVaultName'))]",
         "applicationInsights": "[variables('applicationInsights')]",
         "containerRegistry": "[variables('containerRegistry')]",
         "adbWorkspace": "[parameters('adbWorkspace')]",

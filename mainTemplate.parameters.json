@@ -3,40 +3,40 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "sqlServerName": {
-            "value": "demoaipsqlserver"
+            "value": "GEN-UNIQUE"
         },
         "sqlDatabaseName": {
-            "value": "aipsqldb"
+            "value": "GEN-UNIQUE"
         },
         "sqlAdministratorLogin": {
-            "value": "aipsqladmin"
+            "value": "GEN-UNIQUE"
         },
         "sqlAdministratorLoginPassword": {
-            "value": "Aip_P@ssw0rd!"
+            "value": "GEN-PASSWORD"
         },
         "keyVaultName": {
-            "value": "aipkvaip"
+            "value": "GEN-UNIQUE"
         },
         "objectId": {
-            "value": "9cc6c82a-c3bb-488b-93d3-4c24115d26b6"
+            "value": "GEN-GUID"
         },
         "kvSku": {
             "value": "Premium"
         },
         "adfName": {
-            "value": "aipdemoadf"
+            "value": "GEN-UNIQUE"
         },
         "adbWorkspaceName": {
-            "value": "aipadbworkspace"
+            "value": "GEN-UNIQUE"
         },
         "adlStorageAccountName": {
-            "value": "aipadlstor"
+            "value": "GEN-UNIQUE"
         },
         "accountType": {
             "value": "Standard_LRS"
         },
         "mlWorkspaceName": {
-            "value": "aipwrkspce"
+            "value": "GEN-UNIQUE"
         },
         "mlSku": {
             "value": "enterprise"
