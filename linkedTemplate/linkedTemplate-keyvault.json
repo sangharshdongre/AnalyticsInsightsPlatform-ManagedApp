@@ -125,7 +125,7 @@
           "type": "Microsoft.KeyVault/vaults",
           "name": "[variables('keyVaultName')]",
           "location": "[variables('location')]",
-          "apiVersion": "2019-09-01",
+          "apiVersion": "2016-10-01",
           "tags": {
               "displayName": "KeyVault"
           },
