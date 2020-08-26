@@ -58,7 +58,6 @@
       },
       "objectId": {
           "type": "string",
-          "defaultValue": "",
           "metadata": {
             "description": "Specifies the object ID of a user, service principal or security group in the Azure Active Directory tenant for the vault. The object ID must be unique for the list of access policies. Get it by using Get-AzADUser or Get-AzADServicePrincipal cmdlets."
           }
@@ -80,15 +79,6 @@
           "metadata": {
             "description": "Specifies the permissions to secrets in the vault. Valid values are: all, get, list, set, delete, backup, restore, recover, and purge."
           }
-      },
-      "certificatesPermissions": {
-        "type": "array",
-        "defaultValue": [
-          "list"
-        ],
-        "metadata": {
-          "description": "description"
-        }
       },
       "kvSku": {
           "type": "string",
@@ -125,7 +115,7 @@
           "type": "Microsoft.KeyVault/vaults",
           "name": "[variables('keyVaultName')]",
           "location": "[variables('location')]",
-          "apiVersion": "2016-10-01",
+          "apiVersion": "2019-09-01",
           "tags": {
               "displayName": "KeyVault"
           },
@@ -140,8 +130,7 @@
                       "tenantId": "[parameters('tenantId')]",
                       "permissions": {
                           "keys": "[parameters('keysPermissions')]",
-                          "secrets": "[parameters('secretsPermissions')]",
-                          "certificates": "[parameters('certificatesPermissions')]"
+                          "secrets": "[parameters('secretsPermissions')]"
                       }
                   }
               ],
