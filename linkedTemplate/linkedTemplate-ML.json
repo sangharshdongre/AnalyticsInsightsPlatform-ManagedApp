@@ -118,7 +118,7 @@
     },
     "cmk_keyvault":{
       "type": "string",
-      "defaultValue": "[resourceId('resourceGroup().name', 'Microsoft.KeyVault/vaults', parameters('keyVaultName'))]",
+      "defaultValue": "[parameters('keyVaultName')]",
       "metadata": {
         "description": "Specifies the customer managed keyVault arm id."
       }
