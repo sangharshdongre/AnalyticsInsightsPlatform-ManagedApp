@@ -22,7 +22,7 @@
                         "constraints":{
                             "required": true,
                             "regex": "^[a-zA-Z][0-9a-zA-Z\\-]{3,24}$",
-                            "validationMessage": "Key Vault name must be a 3-24 character string, containing only 0-9, a-z, A-Z, and hyphen (-)."
+                            "validationMessage": "Vault name must be between 3-24 alphanumeric characters. The name must begin with a letter, end with a letter or digit, and not contain consecutive hyphens."
                         }
                     },
                     {
@@ -40,7 +40,7 @@
                         "name": "kvSku",
                         "type": "Microsoft.Common.DropDown",
                         "label": "SKU",
-                        "toolTip": "Select the SKU for key vault.",
+                        "toolTip": "Key vault pricing tier (Standard/Premium).",
                         "defaultValue": "Premium",
                         "constraints": {
                             "allowedValues": [
@@ -218,11 +218,11 @@
                         "name": "mlWorkspaceName",
                         "type": "Microsoft.Common.TextBox",
                         "label": "ML Workspace Name",
-                        "toolTip": "ML Services workspace name can contain alphanumerics and hyphen characters.",
+                        "toolTip": "Workspace name must be unique within your resource group.",
                         "constraints":{
                             "required": true,
                             "regex": "^[a-zA-Z0-9][a-zA-Z0-9_\\-]{3,33}$",
-                            "validationMessage": "Databricks workspace name must contain alphanumeric, underscores, and hyphens."
+                            "validationMessage": "The workspace name must be between 3 and 33 characters. The name may only include alphanumeric characters and hyphens."
                         }
                     },
                     {

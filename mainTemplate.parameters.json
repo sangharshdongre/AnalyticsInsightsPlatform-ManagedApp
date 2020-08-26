@@ -21,7 +21,7 @@
             "value": "GEN-GUID"
         },
         "kvSku": {
-            "value": "premium"
+            "value": "Premium"
         },
         "adfName": {
             "value": "aipdemoadf"
@@ -34,6 +34,12 @@
         },
         "accountType": {
             "value": "Standard_LRS"
+        },
+        "mlWorkspaceName": {
+            "value": "aipwrkspce"
+        },
+        "mlSku": {
+            "value": "enterprise"
         }
     }
 }
